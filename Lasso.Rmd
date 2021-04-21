@@ -1,0 +1,31 @@
+---
+title: "Lasso"
+author: "Kingsley Ofoegbu"
+date: "4/19/2021"
+output: pdf_document
+---
+
+```{r}
+suppressMessages(library(tidyverse))
+library(leaps)
+library(glmnet)
+library(MASS)
+```
+
+
+## load Data
+```{r}
+CovidData <- read_csv("./data/CovidDataSetFinal.csv")
+attach(CovidData)
+CovidData
+```
+
+```{r}
+unique(CovidData$`Statewide Mask Requirement`)
+```
+```{r}
+reg <- lm( PercentWearingMask ~ ., data=CovidData )
+X <- model.matrix(reg)
+Y <- Boston$PercentWearingMask
+```
+
