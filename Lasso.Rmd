@@ -17,15 +17,46 @@ library(MASS)
 ```{r}
 CovidData <- read_csv("./data/CovidDataSetFinal.csv")
 attach(CovidData)
-CovidData
+CovidData 
+```
+```{r}
+n <- length(PercentWearingMask)
+Z <- sample(n,n/2)
 ```
 
 ```{r}
-unique(CovidData$`Statewide Mask Requirement`)
-```
-```{r}
-reg <- lm( PercentWearingMask ~ ., data=CovidData )
+reg <-
+  lm(
+    PercentWearingMask ~ Population + ApproximatePopulationDensity + cases + COVID_deaths + confirmed_cases + confirmed_deaths + PercentUnemployed + MedianHouseholdIncome + PercentAfricanAmerican + PercentHispanic + PercentAsianAmerican + PercentWhiteAmerican + PercentNativeAmericanAndAlaskaNative + PercentNativeHawaiianAndOtherPacificIslander + PercPeopleWithCollegeOrAssociateDegreePerYear + StatewideMaskRequirement + PercentMale + PercentFemale + PercAdultsWithLessThanHighSchoolDiploma + PercAdultsWithHighSchoolDiploma + PercAdultsWithSomeCollegeOrAssociateDegree + PercAdultsWithBachelorDegreeOrHigher,
+    data = CovidData
+  )
 X <- model.matrix(reg)
-Y <- Boston$PercentWearingMask
+summary(reg)
+nrow(X)
+```
+
+```{r}
+LassoCV1 <-
+  cv.glmnet(X[Z, ],
+            PercentWearingMask[Z],
+            alpha = 1,
+            lambda = seq(0, 10, 0.01))
+LassoCV1$lambda.min
+```
+## Optimal Lambda
+```{r}
+LassoCV2 <- cv.glmnet(X[Z, ],
+                     PercentWearingMask[Z],
+                     alpha = 1,
+                     lambda = seq(0, 0.1, 0.0001))
+LassoCV2$lambda.min
+```
+
+```{r}
+LASSO <- glmnet(X[Z,],
+                PercentWearingMask[Z],
+                alpha = 1,
+                lambda = LassoCV2$lambda.min)
+predict(LASSO, type = "coefficients")
 ```
 
