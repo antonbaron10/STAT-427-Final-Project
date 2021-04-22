@@ -68,4 +68,11 @@ reg.fit <- regsubsets(
   )
 summary(reg.fit)
 ```
+```{r}
+which.min( summary(reg.fit)$cp )
+
+which.min( summary(reg.fit)$bic )
+
+which.max( summary(reg.fit)$adjr2 )
+```
 
