@@ -20,6 +20,7 @@ CovidData = na.omit(CovidData)
 attach(CovidData)
 CovidData 
 ```
+
 ```{r}
 n <- length(PercentWearingMask)
 Z <- sample(n,n/2)
@@ -59,5 +60,12 @@ LASSO <- glmnet(X[Z,],
                 alpha = 1,
                 lambda = LassoCV2$lambda.min)
 predict(LASSO, type = "coefficients")
+```
+```{r}
+reg.fit <- regsubsets(
+    PercentWearingMask ~ Population + ApproximatePopulationDensity + cases + COVID_deaths + confirmed_cases + confirmed_deaths + PercentUnemployed + MedianHouseholdIncome + PercentAfricanAmerican + PercentHispanic + PercentAsianAmerican + PercentWhiteAmerican + PercentNativeAmericanAndAlaskaNative + PercentNativeHawaiianAndOtherPacificIslander + PercPeopleWithCollegeOrAssociateDegreePerYear + StatewideMaskRequirement + PercentMale + PercentFemale + PercAdultsWithLessThanHighSchoolDiploma + PercAdultsWithHighSchoolDiploma + PercAdultsWithSomeCollegeOrAssociateDegree + PercAdultsWithBachelorDegreeOrHigher,
+    data = CovidData
+  )
+summary(reg.fit)
 ```
 
