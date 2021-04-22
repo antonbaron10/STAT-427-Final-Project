@@ -53,7 +53,7 @@ LassoCV2 <- cv.glmnet(X[Z, ],
                      lambda = seq(0, 0.1, 0.000001))
 LassoCV2$lambda.min
 ```
-
+### variables for lasso are Population, PercentUnemployed, MedianHouseholdIncome, PercentAfricanAmerican, PercentHispanic PercentNativeAmericanAndAlaskaNative, PercentNativeHawaiianAndOtherPacificIslander, StatewideMaskRequirement(yes), PercAdultsWithSomeCollegeOrAssociateDegree, PercAdultsWithBachelorDegreeOrHigher
 ```{r}
 LASSO <- glmnet(X[Z,],
                 PercentWearingMask[Z],
