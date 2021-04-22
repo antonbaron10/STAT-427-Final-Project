@@ -6,6 +6,7 @@ output: pdf_document
 ---
 
 # Necessary Libraries
+
 ```{r}
 library(tidyverse)
 library(class)
@@ -15,12 +16,74 @@ library(class)
 # Loading Data
 
 ```{r}
-CovidData <- read.csv("./StatMachineLearning427/STAT-427-Final-Project/data/CovidDataSetFinal.csv")
-CovidData <- drop_na(CovidData)
+CovidData <- read.csv("./data/CovidDataSetFinal.csv")
+CovidData <- na.omit(CovidData)
 
 
 CovidDataFiltered <- CovidData[, c("MaskWearingCategory","Population","PercentUnemployed","MedianHouseholdIncome","PercentAfricanAmerican","PercentHispanic", "PercentNativeAmericanAndAlaskaNative","PercentNativeHawaiianAndOtherPacificIslander","StatewideMaskRequirement","PercAdultsWithSomeCollegeOrAssociateDegree","PercAdultsWithBachelorDegreeOrHigher","per_dem2016","per_gop2016","per_gop2020","per_dem2020")]
 
 attach(CovidDataFiltered)
 ```
+```{r}
+CovidDataFiltered
+```
+
+
+# Training & Testing Data
+
+```{r}
+n = nrow(CovidDataFiltered)
+Z = sample(n, n/2)
+Training = CovidDataFiltered[Z,]
+Testing = CovidDataFiltered[-Z,]      
+```
+
+```{r}
+dim(CovidDataFiltered)
+dim(Training)
+dim(Testing)
+```
+
+```{r}
+TrainingX = Training[, 2:8, 10:15]
+TestingX = Testing[, 2:8, 10:15] 
+TrainingY = MaskWearingCategory[Z]
+TestingK = MaskWearingCategory[-Z]
+```
+
+# KNN Analysis
+
+```{r}
+class.rate = rep(0, 25)
+for (K in 1:25) {
+  knn1 = knn(TrainingX, TestingX, TrainingY, K)
+  class.rate[K] = mean(TestingK == knn1)
+  }
+
+class.rate
+```
+
+```{r}
+plot(k, class.rate, type = "b", lwd = 5)
+```
+At K = 12 the classification rate is 92.78%
+
+
+The KNN model can predict with a likelihood of 92-93% the chance that a county wears masks.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
