@@ -29,7 +29,7 @@ Z <- sample(n,n/2)
 ```{r}
 reg <-
   lm(
-    PercentWearingMask ~ Population + ApproximatePopulationDensity + cases + COVID_deaths + confirmed_cases + confirmed_deaths + PercentUnemployed + MedianHouseholdIncome + PercentAfricanAmerican + PercentHispanic + PercentAsianAmerican + PercentWhiteAmerican + PercentNativeAmericanAndAlaskaNative + PercentNativeHawaiianAndOtherPacificIslander + PercPeopleWithCollegeOrAssociateDegreePerYear + StatewideMaskRequirement + PercentMale + PercentFemale + PercAdultsWithLessThanHighSchoolDiploma + PercAdultsWithHighSchoolDiploma + PercAdultsWithSomeCollegeOrAssociateDegree + PercAdultsWithBachelorDegreeOrHigher,
+    PercentWearingMask ~ Population + ApproximatePopulationDensity + cases + COVID_deaths + confirmed_cases + confirmed_deaths + PercentUnemployed + MedianHouseholdIncome + PercentAfricanAmerican + PercentHispanic + PercentAsianAmerican + PercentWhiteAmerican + PercentNativeAmericanAndAlaskaNative + PercentNativeHawaiianAndOtherPacificIslander + PercPeopleWithCollegeOrAssociateDegreePerYear + StatewideMaskRequirement + PercentMale + PercentFemale + PercAdultsWithLessThanHighSchoolDiploma + PercAdultsWithHighSchoolDiploma + PercAdultsWithSomeCollegeOrAssociateDegree + PercAdultsWithBachelorDegreeOrHigher+per_dem2016+per_gop2016+per_gop2020+per_dem2020,
     data = CovidData
   )
 X <- model.matrix(reg)
@@ -50,10 +50,10 @@ LassoCV1$lambda.min
 LassoCV2 <- cv.glmnet(X[Z, ],
                      PercentWearingMask[Z],
                      alpha = 1,
-                     lambda = seq(0, 0.1, 0.000001))
+                     lambda = seq(0, 0.1, 0.00001))
 LassoCV2$lambda.min
 ```
-### variables for lasso are Population, PercentUnemployed, MedianHouseholdIncome, PercentAfricanAmerican, PercentHispanic PercentNativeAmericanAndAlaskaNative, PercentNativeHawaiianAndOtherPacificIslander, StatewideMaskRequirement(yes), PercAdultsWithSomeCollegeOrAssociateDegree, PercAdultsWithBachelorDegreeOrHigher
+### variables for lasso are Population, PercentUnemployed, MedianHouseholdIncome, PercentAfricanAmerican, PercentHispanic PercentNativeAmericanAndAlaskaNative, PercentNativeHawaiianAndOtherPacificIslander, StatewideMaskRequirement(yes), PercAdultsWithSomeCollegeOrAssociateDegree, PercAdultsWithBachelorDegreeOrHigher,per_dem2016,per_gop2016,per_gop2020,per_dem2020
 ```{r}
 LASSO <- glmnet(X[Z,],
                 PercentWearingMask[Z],

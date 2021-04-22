@@ -1,0 +1,35 @@
+---
+title: "KMeans"
+author: "Anthony Baron"
+date: "4/22/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+#LOAD DATA
+
+CovidData <- read.csv("./data/CovidDataSetFinal.csv")
+CovidData = na.omit(CovidData)
+##Points used include MaskWearingCategory,Population, PercentUnemployed, MedianHouseholdIncome, PercentAfricanAmerican, PercentHispanic PercentNativeAmericanAndAlaskaNative, PercentNativeHawaiianAndOtherPacificIslander, StatewideMaskRequirement(yes), PercAdultsWithSomeCollegeOrAssociateDegree, PercAdultsWithBachelorDegreeOrHigher,per_dem2016,per_gop2016,per_gop2020,per_dem2020,per_dem2016,per_gop2016,per_gop2020,per_dem2020
+
+CovidDataFiltered = CovidData[, c("Population","PercentUnemployed","MedianHouseholdIncome","PercentAfricanAmerican","PercentHispanic", "PercentNativeAmericanAndAlaskaNative","PercentNativeHawaiianAndOtherPacificIslander","PercAdultsWithSomeCollegeOrAssociateDegree","PercAdultsWithBachelorDegreeOrHigher","per_dem2016","per_gop2016","per_gop2020","per_dem2020")]
+
+attach(CovidDataFiltered)
+
+```
+
+```{r}
+library(ggpubr)
+library(factoextra)
+KM2 = kmeans(CovidDataFiltered,2)
+plot(KM2,data=CovidDataFiltered)
+
+print(KM2$size)
+
+```
