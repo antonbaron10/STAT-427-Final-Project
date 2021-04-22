@@ -1,0 +1,26 @@
+---
+title: "KNN"
+author: "David Leshchiner"
+date: "4/23/2021"
+output: pdf_document
+---
+
+# Necessary Libraries
+```{r}
+library(tidyverse)
+library(class)
+```
+
+
+# Loading Data
+
+```{r}
+CovidData <- read.csv("./StatMachineLearning427/STAT-427-Final-Project/data/CovidDataSetFinal.csv")
+CovidData <- drop_na(CovidData)
+
+
+CovidDataFiltered <- CovidData[, c("MaskWearingCategory","Population","PercentUnemployed","MedianHouseholdIncome","PercentAfricanAmerican","PercentHispanic", "PercentNativeAmericanAndAlaskaNative","PercentNativeHawaiianAndOtherPacificIslander","StatewideMaskRequirement","PercAdultsWithSomeCollegeOrAssociateDegree","PercAdultsWithBachelorDegreeOrHigher","per_dem2016","per_gop2016","per_gop2020","per_dem2020")]
+
+attach(CovidDataFiltered)
+```
+
