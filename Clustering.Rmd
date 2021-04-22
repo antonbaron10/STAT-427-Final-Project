@@ -25,11 +25,12 @@ attach(CovidDataFiltered)
 ```
 
 ```{r}
-library(ggpubr)
-library(factoextra)
-KM2 = kmeans(CovidDataFiltered,2)
-plot(KM2,data=CovidDataFiltered)
-
+KM2 = kmeans(CovidDataFiltered,10)
 print(KM2$size)
 
+```
+
+```{r}
+HC = hclust( dist(CovidDataFiltered), method="complete" )
+HC2 = cutree(HC, k = 10)
 ```

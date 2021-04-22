@@ -12,6 +12,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ## R Markdown
 
 ```{r}
+##libraries needed
+library(boot)
+```
+
+```{r}
 #LOAD DATA
 
 CovidData <- read.csv("./data/CovidDataSetFinal.csv")
@@ -38,7 +43,7 @@ TPR = rep(0,100)
 FPR = rep(0,100)
 
 for(k in 1:100){
-  covid.train.glm = glm(MaskWearingCategory~.,data = CovidDataFiltered,family = "binomial")
+  covid.train.glm = glm(MaskWearingCategory~.,data = covid.train,family = "binomial")
   covid.test.predict = predict(covid.train.glm,covid.test, type="response" )
   Yhat = (covid.test.predict > k/100 )
   TPR[k] = sum( Yhat==1 & MaskWearingCategory==1 ) / sum( MaskWearingCategory == 1 )
@@ -48,18 +53,34 @@ plot(FPR, TPR, xlab="False positive rate", ylab="True positive rate", main="ROC 
 
 lines(FPR, TPR)
 
-###Result: best threshold is about 0.83 from ROC curve
+###Result: best threshold is about 0.78 from ROC curve
 
 
 ```
 
 ```{r}
-##################Predict now that best threshold is selected of 0.83
+##################Predict now that best threshold is selected of 0.7
+
+#Summary of the glm
+summary(covid.train.glm)
+
 
 covid.test.predict = predict( covid.train.glm, covid.test, type="response" )
-CorrectPredict = 1*( covid.test.predict > 0.83 )
 
-table(CorrectPredict,covid.test$MaskWearingCategory)
+CorrectPredict = 1*( covid.test.predict > 0.78 )
+CategoryWearingMask = covid.test$MaskWearingCategory
 
+#Confusion Table
+table(CorrectPredict,CategoryWearingMask)
+
+
+```
+
+```{r}
+###Doing cross validation
+covid.full.glm = glm(MaskWearingCategory~.,data = CovidDataFiltered,family = "binomial")
+
+covid.data.cv = cv.glm(CovidDataFiltered,covid.full.glm)
+print(covid.data.cv)$delta[1]
 
 ```
