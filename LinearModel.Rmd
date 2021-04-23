@@ -1,0 +1,87 @@
+---
+title: "Linear Model"
+author: "Ana Lim"
+date: "4/22/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+read.csv("CovidDataSetFinal.csv")
+CovidData <- read.csv("CovidDataSetFinal.csv")
+CovidData = na.omit(CovidData)
+
+names(CovidData)
+CovidDataFiltered = CovidData[, c("MaskWearingCategory","Population","PercentUnemployed","MedianHouseholdIncome","PercentAfricanAmerican","PercentHispanic", "PercentNativeAmericanAndAlaskaNative","PercentNativeHawaiianAndOtherPacificIslander","StatewideMaskRequirement","PercAdultsWithSomeCollegeOrAssociateDegree","PercAdultsWithBachelorDegreeOrHigher","per_dem2016","per_gop2016","per_gop2020","per_dem2020")]
+attach(CovidDataFiltered)
+
+summary(CovidDataFiltered)
+```
+
+
+Full Model
+```{r}
+CovidData.full <- lm(MaskWearingCategory ~ Population + PercentUnemployed + MedianHouseholdIncome + PercentAfricanAmerican + PercentHispanic + PercentNativeAmericanAndAlaskaNative + PercentNativeHawaiianAndOtherPacificIslander + StatewideMaskRequirement + PercAdultsWithSomeCollegeOrAssociateDegree + PercAdultsWithBachelorDegreeOrHigher + per_dem2016 + per_gop2016 + per_dem2020, data=CovidDataFiltered)
+CovidData.full
+
+summary(CovidData.full)
+```
+
+Stepwise
+```{r}
+step(CovidData.reg)
+```
+
+Reduced Model
+```{r}
+CovidData.red <- lm(MaskWearingCategory ~ MedianHouseholdIncome + PercentAfricanAmerican + PercentHispanic + PercentNativeAmericanAndAlaskaNative + StatewideMaskRequirement + PercAdultsWithBachelorDegreeOrHigher + PercAdultsWithSomeCollegeOrAssociateDegree + per_gop2016 + per_dem2020)
+
+summary(CovidData.red)
+```
+
+```{r}
+selcrit <-function(lmout) {
+  n <- length(lmout$fit)
+  rsq <- summary(lmout)$r.sq
+  adj.rsq <- summary(lmout)$adj.r.sq 
+  aic <- extractAIC(lmout)[2]
+  bic <- extractAIC(lmout, k = log(n))[2]
+  press <- sum((lmout$residuals/(1 - hatvalues(lmout)))^2) 
+  cbind(rsq, adj.rsq, aic, bic, press)
+}
+selcrit(CovidData.red)
+selcrit(CovidData.full)
+```
+
+
+Anova
+```{r}
+anova(CovidData.full, CovidData.red)
+```
+
+
+```{r}
+plot(CovidData.full)
+par(mfrow=c(2,2))
+```
+```{r}
+plot(CovidData$MedianHouseholdIncome, CovidData.full$residuals)
+```
+
+
+```{r}
+library(boot)
+
+ss = smooth.spline(Population,MedianHouseholdIncome,df=15,cv=TRUE)
+plot(Population,MedianHouseholdIncome)
+lines(ss, col="red", lwd=3)
+
+spline.predict = predict(ss)
+spline.predict
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
