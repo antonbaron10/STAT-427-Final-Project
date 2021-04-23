@@ -82,7 +82,7 @@ table(TestingK, knnresult)
 
 1040/1108 = 94.04 (reaffirms high classification rate)
 
-# KNN with 10 fold CV
+# KNN Cross-Validation
 
 ```{r}
 cv <- knn.cv(TrainingX, TrainingY, 12)
