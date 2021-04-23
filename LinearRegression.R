@@ -2,7 +2,7 @@ library(tidyverse)
 library(ggplot2)
 library(MASS)
 
-CovidData <- read.csv("CovidDataSetFinal.csv")
+CovidData <- read.csv("data/CovidDataSetFinal.csv")
 CovidData = na.omit(CovidData)
 
 ###COVID DATA FILTERED IS THE DATASET YOU WANT TO USE
@@ -17,10 +17,10 @@ summary(CovidData)
 head(CovidData)
 
 
-
-CovidData.reg <- lm(MaskWearingCategory~.,data="CovidDataFiltered")
+CovidData.reg <- lm(MaskWearingCategory~.,data=CovidDataFiltered)
 CovidData.reg
 
 summary(CovidData.reg)
 
 plot(CovidData.reg)
+
