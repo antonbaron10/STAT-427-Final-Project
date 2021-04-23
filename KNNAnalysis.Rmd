@@ -67,20 +67,25 @@ class.rate
 plot(k, class.rate, type = "b", lwd = 5)
 ```
 At K = 14 the classification rate is 94.04%
+At K = 7 the classification rate
 
 
-The KNN model can predict with a likelihood of 94% the chance that a county wears masks.
-
-
-# Confusion Matrix
+# Confusion Matrices
 
 ```{r}
 knnresult <- knn(TrainingX, TestingX, TrainingY, 14)
 table(TestingK, knnresult)
 ```
 
+1042/1108 = 94.04
 
-1042/1108 = 94.04 (reaffirms high classification rate)
+
+```{r}
+knnresult <- knn(TrainingX, TestingX, TrainingY, 7)
+table(TestingK, knnresult)
+```
+1029/1108 = 92.87%
+
 
 # KNN Cross-Validation
 
@@ -89,9 +94,14 @@ cv <- knn.cv(TrainingX, TrainingY, 14)
 table(TestingK, cv)
 ```
 
-1039/1108 = 93.77
+1039/1108 = 93.77%
 
+```{r}
+cv <- knn.cv(TrainingX, TrainingY, 7)
+table(TestingK, cv)
+```
 
+1036/1108 = 93.5%
 
 
 
