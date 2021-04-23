@@ -5,16 +5,102 @@ date: "4/23/2021"
 output: pdf_document
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+# Necessary Libraries
 
 ```{r}
-plot(cars)
+library(tidyverse)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+# Loading Data
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+CovidData <- read.csv("./data/CovidDataSetFinal.csv")
+
+CovidDataFiltered <- CovidData[, c("MaskWearingCategory","Population","PercentUnemployed","MedianHouseholdIncome","PercentAfricanAmerican","PercentHispanic", "PercentNativeAmericanAndAlaskaNative","PercentNativeHawaiianAndOtherPacificIslander","StatewideMaskRequirement","PercAdultsWithSomeCollegeOrAssociateDegree","PercAdultsWithBachelorDegreeOrHigher","per_dem2016","per_gop2016","per_gop2020","per_dem2020")]
+
+attach(CovidDataFiltered)
+```
+# Summary Statistics
+
+```{r}
+head(CovidDataFiltered)
+```
+```{r}
+CovidDataFiltered$StatewideMaskRequirement <- as.factor(CovidDataFiltered$StatewideMaskRequirement)
+CovidDataFiltered$MaskWearingCategory <- as.factor(CovidDataFiltered$MaskWearingCategory)
+summary(CovidDataFiltered)
+```
+
+```{r}
+pairs(CovidDataFiltered)
+```
+```{r}
+cor(CovidDataFiltered[1:8, 10:15])
+```
+# Data Visualization
+
+```{r}
+library(ggplot2)
+```
+
+### Education & Wealth
+
+```{r}
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, PercAdultsWithBachelorDegreeOrHigher, fill = StatewideMaskRequirement)) +
+  geom_violin() +
+  theme_bw()
+
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, PercAdultsWithSomeCollegeOrAssociateDegree, fill = StatewideMaskRequirement)) +
+  geom_violin() +
+  theme_bw()
+
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, MedianHouseholdIncome, fill = StatewideMaskRequirement)) +
+  geom_violin() +
+  theme_bw()
+```
+### Political Affiliation
+
+```{r}
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, per_dem2020, fill = StatewideMaskRequirement)) +
+  geom_violin() +
+  theme_bw()
+
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, per_gop2020, fill = StatewideMaskRequirement)) +
+  geom_violin() +
+  theme_bw()
+```
+
+### Racial Minority Groups
+
+```{r}
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, PercentAfricanAmerican)) +
+  geom_violin() +
+  theme_bw()
+
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, PercentHispanic)) +
+  geom_violin() +
+  theme_bw()
+
+CovidDataFiltered %>% 
+  ggplot(aes(MaskWearingCategory, PercentNativeAmericanAndAlaskaNative)) +
+  geom_violin() +
+  theme_bw()
+```
+
+
+
+
+
+
+
+
+
+
